@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit.backpackers.model.ReplyDao">
+  <select id="Replylist" resultType="com.bit.backpackers.model.entity.ReplyVo">
+    select * from board_reply where board_no=#{board_no}
+  </select>
+  <insert id="insertReply" >
+  insert into board_reply (reply_id,reply_depth,reply_time,reply_content,board_no) values (#{reply_id},1,CURTIME(),#{reply_content},#{board_no})
+  </insert>
+  	<update id="updateReply">
+  	update board_reply set reply_content=#{reply_content} where reply_no=#{reply_no}
+  	</update>
+  	<delete id="deleteReply">
+  	delete from board_reply where reply_no=#{reply_no}
+  	</delete>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.admin.shop.model.ShopAdminDao">
+  	<select id="selectAll" resultType="ShopAdminVo">
+  		SELECT * FROM shop;
+  	</select>
+  	<select id="selectOne" parameterType="ShopAdminVo" resultType="ShopAdminVo">
+  		SELECT * FROM shop WHERE shopCode = #{shopCode};
+  	</select>
+  	<update id="updateOne" parameterType="ShopAdminVo">
+  		UPDATE shop
+  		SET shopTitle = #{shopTitle},
+  			mainCategoryCode = #{mainCategoryCode},
+  			subCategoryCode = #{subCategoryCode},
+  			shopContent = #{shopContent},
+  			shopPrice = #{shopPrice}
+  		WHERE shopCode = #{shopCode} 
+  	</update>
+  	<delete id="deleteOne" parameterType="ShopAdminVo">
+  		DELETE FROM shop WHERE shopCode = #{shopCode}
+  	</delete>
+  </mapper>

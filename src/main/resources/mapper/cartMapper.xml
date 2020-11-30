@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.cart.model.CartDao">
+  
+  	<insert id="insertItem">
+  		INSERT INTO cart (productCode, userId, cartDate, cartRemoved, optionCode) VALUES (#{productCode}, #{userId}, NOW(), 0, #{optionCode})
+  	</insert>
+  	
+  	<select id="selectCart" resultType="CartProductVo">
+  		SELECT 
+  			cart.productCode,
+  			product.optionCode AS firstOptionCode,
+  			cart.optionCode AS secondOptionCode,
+  			COUNT(cart.optionCode) AS quantity 
+  		FROM cart 
+        LEFT JOIN product
+        ON cart.productCode = product.productCode
+  		WHERE cart.cartRemoved = 0 AND cart.userId = #{userId}
+  		GROUP BY
+  			cart.productCode,
+            product.optionCode,
+  			cart.optionCode;
+  	</select>
+  	
+  	<delete id="minusItemQuantity">
+  		DELETE FROM cart 
+  		WHERE productCode = #{productCode} AND optionCode = #{optionCode} AND userID = #{userId}
+  		ORDER BY cartId
+	  	LIMIT 1
+  	</delete>
+  	
+  	<delete id="removeItem">
+  		DELETE FROM cart 
+  		WHERE productCode = #{productCode} AND optionCode = #{optionCode} AND userID = #{userId}
+  		ORDER BY cartId
+  	</delete>
+  </mapper>

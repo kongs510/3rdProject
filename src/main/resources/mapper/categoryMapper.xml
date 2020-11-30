@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.category.model.CategoryDao">
+  	
+  	<resultMap type="CategoryVo" id="categoryMap">
+  		<id property="mainCategoryCode" column="mainCategoryCode"/>
+  		<result property="mainCategoryName" column="mainCategoryName"/>
+  		<collection property="subCategoryList" select="findSubCategoryByMainCategoryCode" column="mainCategoryCode" javaType="ArrayList" ofType="String" />
+  	</resultMap>
+  	
+  	<select id="selectCategoryListByMainCategoryCode" resultMap="categoryMap">
+  		SELECT * FROM main_category
+  	</select>
+  	
+  	<select id="findSubCategoryByMainCategoryCode" resultType="com.bit.backpackers.category.model.entity.SubCategoryVo">
+  		SELECT * FROM sub_category WHERE mainCategoryCode = #{mainCategoryCode}
+  	</select>
+  	
+  	<select id="findSubCategory" resultType="String">
+  		SELECT subCategoryCode FROM sub_category WHERE subCategoryName = #{subCategoryName}
+  	</select>
+  	
+  	<select id="findMainCategory" resultType="String">
+  		SELECT mainCategoryCode FROM main_category WHERE mainCategoryName = #{mainCategoryName}
+  	</select>
+  	
+  	<select id="selectSubCategory" resultType="com.bit.backpackers.category.model.entity.SubCategoryVo">
+  		SELECT * FROM sub_category
+  	</select>
+  	
+  	<select id="selectMainCategory" resultType="com.bit.backpackers.category.model.entity.MainCategoryVo">
+  		SELECT * FROM main_category
+  	</select>
+  	
+  </mapper>

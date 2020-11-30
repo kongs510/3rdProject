@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.shop.model.ShopDao">
+  
+  	<resultMap type="ShopVo" id="shopResult">
+  		<id property="shopCode" column="shopCode"/>
+  		<collection property="productList" select="selectProductByShopCode" column="shopCode" ofType="ProductVo"></collection>
+  	</resultMap>
+  
+  	<select id="selectShopList" resultMap="shopResult">
+	    SELECT shopCode, shopTitle, shopPrice, subCategoryName, mainCategoryName 
+		FROM shop AS shop 
+		LEFT JOIN (
+			SELECT sub.subCategoryCode, sub.subCategoryName, main.mainCategoryName 
+			FROM sub_category AS sub 
+			LEFT JOIN main_category AS main 
+			ON sub.mainCategoryCode = main.mainCategoryCode
+			) AS cat
+		ON shop.subCategoryCode = cat.subCategoryCode
+		<if test="_parameter != null">
+			<where>
+				<if test="_parameter.containsKey('mainCategoryName')">
+					mainCategoryName = #{mainCategoryName}
+				</if>
+				<if test="_parameter.containsKey('subCategoryName')">
+					AND subCategoryName = #{subCategoryName}
+				</if>
+			</where>
+		</if>
+  	</select>
+  	
+  	<select id="selectShop" resultMap="shopResult">
+		SELECT shopCode, shopTitle, shopPrice, subCategoryName, mainCategoryName 
+		FROM shop AS shop 
+		LEFT JOIN (
+			SELECT sub.subCategoryCode, sub.subCategoryName, main.mainCategoryName 
+			FROM sub_category AS sub 
+			LEFT JOIN main_category AS main 
+			ON sub.mainCategoryCode = main.mainCategoryCode
+			) AS cat
+		ON shop.subCategoryCode = cat.subCategoryCode  		
+ 		WHERE shopCode = #{shopCode}
+  	</select>
+  	
+  	<resultMap type="ProductVo" id="productResult">
+  		<id property="productId" column="productId"/>
+  		<result property="productCode" column="productCode"/>
+  		<collection property="productImageList" select="selectImageByProductCode" column="productCode" ofType="ImageVo"></collection>
+  		<collection property="productItemList" select="selectItemByProductCode" column="productCode" ofType="ProductVo"></collection>
+  	</resultMap>
+  	
+  	<select id="selectProductByShopCode" resultMap="productResult">
+  		SELECT shopCode, productCode, 
+  			(SELECT optionGroupName FROM option_group AS grp WHERE grp.optionGroupCode = prod.optionGroupCode) AS firstOptionGroupName,
+  			(SELECT optionName FROM option_table AS opt WHERE opt.optionCode = prod.optionCode) AS firstOptionName
+  		FROM product as prod
+  		WHERE shopCode = #{shopCode}
+  	</select>
+  	
+  	<select id="selectImageByProductCode" resultType="ImageVo">
+  		SELECT * FROM product_image WHERE productCode = #{productCode} ORDER BY imageOrder ASC
+  	</select>
+  	
+  	<select id="selectItemByProductCode" resultType="ProductVo">
+  		SELECT 
+  			productCode, itemCode,
+  			(SELECT optionGroupName FROM option_group AS grp WHERE grp.optionGroupCode = product_item.optionGroupCode) AS firstOptionGroupName,
+  			optionGroupCode, 
+  			(SELECT optionName FROM option_table AS opt WHERE opt.optionCode = product_item.optionCode) AS firstOptionName,
+  			optionCode
+  		FROM product_item
+  		WHERE productCode = #{productCode}
+  	</select>
+  	
+  	<select id="selectShopByProductCode" resultType="shopVo">
+		SELECT 
+			shop.shopCode, 
+			shopTitle, 
+			shopPrice, 
+			subCategoryName, 
+			mainCategoryName 
+		FROM shop 
+		LEFT JOIN (
+			SELECT 
+				sub.subCategoryCode, 
+				sub.subCategoryName, 
+				main.mainCategoryName 
+			FROM sub_category AS sub 
+			LEFT JOIN main_category AS main 
+			ON sub.mainCategoryCode = main.mainCategoryCode
+			) AS cat 
+		ON shop.subCategoryCode = cat.subCategoryCode 
+		LEFT JOIN product 
+		ON shop.shopCode = product.shopCode
+		WHERE productCode = #{productCode}
+  	</select>
+  	
+  </mapper>

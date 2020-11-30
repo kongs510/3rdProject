@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.product.model.ProductDao">
+  	
+  	<select id="selectTitleImageFilteredBy" resultType="ImageVo">
+  		SELECT * FROM product_image WHERE productCode = #{productCode} and imageOrder = 0
+  	</select>
+  	
+  	<select id="selectImageFilteredBy" resultType="ImageVo">
+  		SELECT * FROM product_image WHERE productCode = #{productCode} ORDER BY imageOrder ASC
+  	</select>
+  	
+  	<select id="selectByShopCode" resultType="ProductVo">
+  		SELECT productId, shopCode, productCode, optionGroupCode AS firstOptionGroupCode, optionCode AS firstOptionCode
+  		FROM product
+  		WHERE shopCode = #{shopCode}
+  	</select>
+  	
+  	<select id="selectItemByProductCode" resultType="ProductVo">
+  		SELECT 
+  			productCode, itemCode,
+  			(SELECT optionGroupName FROM option_group AS grp WHERE grp.optionGroupCode = product_item.optionGroupCode) AS firstOptionGroupName,
+  			optionGroupCode, 
+  			(SELECT optionName FROM option_table AS opt WHERE opt.optionCode = product_item.optionCode) AS firstOptionName,
+  			optionCode
+  		FROM product_item
+  		WHERE productCode = #{productCode}
+  	</select>
+  	
+  	<select id="selectProductByShopCode" resultType="com.bit.backpackers.product.model.entity.NewProductVo">
+  		SELECT * FROM product WHERE shopCode = #{shopCode}
+  	</select>
+  	
+  	<select id="selectProductItemByProductCode" resultType="com.bit.backpackers.product.model.entity.NewProductItemVo">
+  		SELECT * FROM product_item WHERE productCode = #{productCode}
+  	</select>
+  	
+  	<select id="selectProductItemByShopCode" resultType="com.bit.backpackers.product.model.entity.NewProductItemVo">
+  		SELECT 	
+	  		item.productCode AS productCode, 
+	  		item.optionGroupCode AS optionGroupCode,
+	  		item.optionCode AS optionCode,
+	        item.itemCode
+  		FROM product_item AS item 
+        LEFT JOIN product
+        ON item.productCode = product.productCode
+  		WHERE product.shopCode = #{shopCode}
+  	</select>
+  	
+  </mapper>

@@ -1,0 +1,55 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<meta charset="UTF-8">
+<% request.setAttribute("root", request.getContextPath()); %>
+<% request.setAttribute("productImage", request.getContextPath() + "/resources/img/product"); %>
+
+	<link rel="stylesheet" type="text/css" href="/backpackers/resources/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/backpackers/resources/css/bootstrap.min.css">
+	<script type="text/javascript" src="/backpackers/resources/js/jquery-1.12.4.js"></script>
+	<!-- <script type="text/javascript" src="/backpackers/resources/js/bootstrap.js"></script> -->
+	<!-- 슬림버전 삭제 아이디찾기,비번찾기 ajax 충돌오류 -->
+ 	<script type="text/javascript" src="/backpackers/resources/js/bootstrap.bundle.min.js"></script>
+	
+
+<title>Backpackers : 3rd project by group 3</title>
+
+<style type="text/css">
+	.navbar-brand {
+		font-size: 30px;
+	}
+	.nav-link {
+		font-size: 15px;
+	}
+	body {
+	  background: url('') no-repeat center center fixed;
+	  -webkit-background-size: cover;
+	  -moz-background-size: cover;
+	  background-size: cover;
+	  -o-background-size: cover;
+	  font-size: 15px;
+	}
+	
+	#navbarResponsive > ul.navbar-nav.ml-auto {
+   		list-style: none;
+   	}
+
+	#navbarResponsive > ul.navbar-form.ml-right {
+		float: right;
+	}
+	
+	#navbarResponsive > ul > li {
+		list-style: none;
+	}
+	
+	.navbar-form {
+    width: max-content;
+    }
+
+	#footer {
+	margin: 0 auto; 
+	text-align: center;
+	}
+
+</style>

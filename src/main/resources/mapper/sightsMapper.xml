@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.model.SightsDao">
+  	<select id="selectAll" resultType="com.bit.backpackers.model.entity.SightsVo">
+  		select * from sights
+  	</select>
+  	<insert id="insertOne">
+  		insert into sights (title, latlng, ellipsis, link, sightsContent) values 
+  		(#{title}, #{latlng}, #{ellipsis}, #{link}, #{sightsContent})
+  	</insert>
+  	<select id="selectOne" resultType="com.bit.backpackers.model.entity.SightsVo">
+  		select * from sights where sightsNo=#{sightsNo}
+  	</select>
+  	<update id="updateOne">
+  		update sights set title=#{title}, latlng=#{latlng}, ellipsis=#{ellipsis}, link=#{link}, sightsContent=#{sightsContent} where sightsNo=#{sightsNo}
+  	</update>
+  	<delete id="deleteOne">
+  		delete from sights where sightsNo=#{sightsNo}
+  	</delete>
+  	<select id="imageselectfileid" resultType="com.bit.backpackers.model.entity.UploadFileVo">
+  		SELECT 
+			id
+			,filename
+			,savefilename
+			,filepath
+			,contenttype
+			,size
+		 FROM uploadfile
+		 WHERE id=#{id}
+  	</select>
+  	<insert id="saveUploadfile" parameterType="com.bit.backpackers.model.entity.UploadFileVo">
+  		 <selectKey resultType="long" keyProperty="id" order="BEFORE">
+	        SELECT ifnull(MAX(id),0)+1 FROM uploadfile;    
+	    </selectKey> 
+	    INSERT INTO uploadfile(
+					    id
+					    ,filename
+					    ,savefilename
+					    ,filepath
+					    ,size)
+						VALUES(
+						#{id}
+						,#{filename}
+						,#{savefilename}
+						,#{filepath}
+						,#{size})
+  	</insert>
+  </mapper>

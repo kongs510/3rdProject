@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.bit.backpackers.DeptDao">
+<!--
+  	<select id="selectAll" resultType="com.bit.backpackers.DeptVo">
+  		SELECT * FROM dept03
+  	</select>
+  	<insert id="insertOne">
+  		INSERT INTO dept03 (dname, loc) VALUES (#{dname}, #{loc})
+  	</insert> 
+   -->
+  </mapper>
+ 

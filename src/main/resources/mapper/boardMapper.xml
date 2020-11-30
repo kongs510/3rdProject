@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit.backpackers.model.BoardDao">
+  <select id="searchBoard" resultType="com.bit.backpackers.model.entity.BoardVo" parameterType="map">
+    select * from board<include refid="search"></include>order by board_no desc limit #{start}, #{end} 
+  </select>
+  
+  <select id="selectBoardList" resultType="hashmap" parameterType="hashmap">
+   <![CDATA[ select * from 
+   board order by board_no desc limit #{pageStart}, #{perPageNum}  ]]>
+  </select>
+  <select id="countBoardList" resultType="Integer">
+    <![CDATA[
+        SELECT
+            count(*)
+        FROM
+            board
+    ]]>
+</select>
+<select id="countBoardContent" resultType="int">
+select count(*) from board<include refid="search"></include>
+</select>
+  <insert id="insertboard">
+  insert into board (user_ID,board_subject,board_content,board_hits,board_type,board_delete,board_views,board_date,board_maketime) values (#{user_ID},#{board_subject},#{board_content},0,1,1,0,CURDATE(),CURTIME())
+   </insert>
+   <select id="boardDetail" resultType="com.bit.backpackers.model.entity.BoardVo">
+   select * from board where board_no=#{board_no}
+   </select>
+   <update id="updateboard">
+   update board set board_content=#{board_content},board_subject=#{board_subject} where board_no=#{board_no} 
+   </update>
+   <update id="increaseViewcnt">
+   update board set board_views = board_views + 1 where board_no=#{board_no}
+   </update>
+   <delete id="deleteboard">
+   delete from board where board_no=#{board_no}
+   </delete>
+   <sql id="search">
+   <choose>
+   <when test="searchOption == 'all'">
+   where user_ID like CONCAT('%',#{keyword},'%')
+  and board_subject like CONCAT('%',#{keyword},'%')
+   and board_content like CONCAT('%',#{keyword},'%')
+   </when>
+   <otherwise>
+   where ${searchOption} like CONCAT('%',#{keyword},'%') 
+   </otherwise>
+   </choose>
+   </sql>
+   	<select id="imageselectfileid" resultType="com.bit.backpackers.model.entity.UploadFileVo">
+  		SELECT 
+			id
+			,filename
+			,savefilename
+			,filepath
+			,contenttype
+			,size
+		 FROM uploadfile
+		 WHERE id=#{id}
+  	</select>
+  	<insert id="saveUploadfile" parameterType="com.bit.backpackers.model.entity.UploadFileVo">
+  		 <selectKey resultType="long" keyProperty="id" order="BEFORE">
+	        SELECT ifnull(MAX(id),0)+1 FROM uploadfile;    
+	    </selectKey> 
+	    INSERT INTO uploadfile(
+					    id
+					    ,filename
+					    ,savefilename
+					    ,filepath
+					    ,size)
+						VALUES(
+						#{id}
+						,#{filename}
+						,#{savefilename}
+						,#{filepath}
+						,#{size})
+  	</insert>
+  	<select id="listmyboard" resultType="com.bit.backpackers.model.entity.BoardVo">
+  	 <![CDATA[ select * from board where user_ID=#{user_ID} ]]>
+  	</select>
+</mapper>

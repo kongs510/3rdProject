@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.shop.model.ShopDao">
+  
+  	<select id="selectShopList" resultType="ShopVo">
+	    SELECT shopCode, shopTitle, shopPrice, subCategoryName, mainCategoryName 
+		FROM shop AS shop 
+		LEFT JOIN (
+			SELECT sub.subCategoryCode, sub.subCategoryName, main.mainCategoryName 
+			FROM sub_category AS sub 
+			LEFT JOIN main_category AS main 
+			ON sub.mainCategoryCode = main.mainCategoryCode
+			) AS cat
+		ON shop.subCategoryCode = cat.subCategoryCode
+		<if test="_parameter != null">
+			<where>
+				<if test="_parameter.containsKey('mainCategoryName')">
+					mainCategoryName = #{mainCategoryName}
+				</if>
+				<if test="_parameter.containsKey('subCategoryName')">
+					AND subCategoryName = #{subCategoryName}
+				</if>
+			</where>
+		</if>
+  	</select>
+  	
+  	<select id="selectShop" resultType="ShopVo">
+		SELECT shopCode, shopTitle, shopPrice, subCategoryName, mainCategoryName 
+		FROM shop AS shop 
+		LEFT JOIN (
+			SELECT sub.subCategoryCode, sub.subCategoryName, main.mainCategoryName 
+			FROM sub_category AS sub 
+			LEFT JOIN main_category AS main 
+			ON sub.mainCategoryCode = main.mainCategoryCode
+			) AS cat
+		ON shop.subCategoryCode = cat.subCategoryCode  		
+ 		WHERE shopCode = #{shopCode}
+  	</select>
+  	
+  	<select id="selectShopByProductCode" resultType="shopVo">
+		SELECT 
+			shop.shopCode, 
+			shopTitle, 
+			shopPrice, 
+			subCategoryName, 
+			mainCategoryName 
+		FROM shop 
+		LEFT JOIN (
+			SELECT 
+				sub.subCategoryCode, 
+				sub.subCategoryName, 
+				main.mainCategoryName 
+			FROM sub_category AS sub 
+			LEFT JOIN main_category AS main 
+			ON sub.mainCategoryCode = main.mainCategoryCode
+			) AS cat 
+		ON shop.subCategoryCode = cat.subCategoryCode 
+		LEFT JOIN product 
+		ON shop.shopCode = product.shopCode
+		WHERE productCode = #{productCode}
+  	</select>
+  	<select id="reviewList" resultType="ReviewVo">
+  		select * 
+  			from tbl_item_review 
+  			where shopCode=#{shopCode}
+  	</select>
+  	<insert id="registReview">
+  		insert
+  			into tbl_item_review(shopCode,userId,reviewContent,reviewDate)
+  			values (#{shopCode},#{userId},#{reviewContent},CURDATE())
+  	</insert>
+  	<delete id="deleteReview">
+  		delete from tbl_item_review
+  			where reviewNo = #{reviewNo}
+  	</delete>
+  	<update id="updateReview">
+  		update tbl_item_review set reviewContent = #{reviewContent}, reviewDate=CURDATE() where reviewNo=#{reviewNo}
+  	</update>
+  </mapper>

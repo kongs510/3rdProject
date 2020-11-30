@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.option.model.OptionDao">
+  	<select id="selectOptionFilteredBy" resultType="OptionVo">
+  		SELECT 
+  			option_table.optionGroupCode, 
+  			optionGroupName,
+  			optionCode, 
+  			optionName   
+  		FROM option_table
+  		LEFT JOIN option_group 
+  		ON option_table.optionGroupCode = option_group.optionGroupCode 
+  		WHERE optionCode = #{optionCode}
+  	</select>
+  	<select id="selectOptionsByProduct" resultType="OptionVo">
+  		SELECT 
+			optionGroupCode,
+		  	(SELECT optionGroupName FROM option_group WHERE option_group.optionGroupCode = product_item.optionGroupCode) AS optionGroupName,
+		  	optionCode, 
+		  	(SELECT optionName FROM option_table WHERE option_table.optionCode = product_item.optionCode) AS optionName
+  		FROM product_item
+  		WHERE productCode = #{productCode} 
+  	</select>
+  	
+  	<select id="selectOption" resultType="com.bit.backpackers.option.model.entity.NewOptionVo">
+  		SELECT * FROM option_table
+  	</select>
+  	
+  	<select id="selectOptionGroup" resultType="com.bit.backpackers.option.model.entity.NewOptionGroupVo">
+  		SELECT * FROM option_group
+  	</select>
+  	
+  	<select id="findOptionByOptionGroupCode" resultType="com.bit.backpackers.option.model.entity.NewOptionVo">
+  		SELECT * FROM option_table WHERE optionGroupCode = #{optionGroupCode}
+  	</select>
+  </mapper>

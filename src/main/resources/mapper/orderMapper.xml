@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bit.backpackers.order.model.OrderDao">
+  
+  	<insert id="insertOrder">
+  		INSERT INTO orders (orderCode, orderStatus, userId, orderDate) VALUES (#{orderCode}, 'CHECKING', #{userId}, NOW()) 
+  	</insert>
+  	
+  	<insert id="insertOrderItem">
+  		INSERT INTO order_item (orderCode, productCode, optionCode) VALUES (#{orderCode}, #{productCode}, #{optionCode})
+  	</insert>
+  	
+  	<select id="selectOrder" resultType="OrderVo">
+  		SELECT * FROM orders WHERE orderCode = #{orderCode}
+  	</select>
+  	
+  	<select id="selectOrdersFilteredBy" resultType="OrderVo">
+  		SELECT * FROM orders WHERE orderStatus = #{orderStatus} AND userId = #{userId}
+  	</select>
+  	  	
+  	<select id="selectOrderItem" resultType="OrderedProductVo">
+  		SELECT productCode FROM order_item WHERE orderCode = #{orderCode}
+  	</select>
+  	
+  	<update id="updateOrder" parameterType="OrderVo">
+  		UPDATE orders
+  		<set>
+  			<if test="orderStatus != null">orderStatus = #{orderStatus},</if>
+  			<if test="orderAmount != null">orderAmount = #{orderAmount},</if>
+  		</set>
+  		WHERE orderCode = #{orderCode}
+  	</update>
+  	
+  </mapper>
